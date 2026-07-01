@@ -37,17 +37,35 @@
     </a-entity>
   </a-scene>
 
-  <script>
-    const video = document.querySelector("#myvideo");
-    const target = document.querySelector("#target");
+<script>
+  const floatingVideo = document.getElementById("floatingVideo");
+  const target = document.getElementById("target");
 
-    target.addEventListener("targetFound", () => {
-      video.play();
-    });
+  target.addEventListener("targetFound", () => {
+    floatingVideo.style.display = "block";
+    floatingVideo.play();
+  });
 
-    target.addEventListener("targetLost", () => {
-     // Do nothing, so video continues playing
-    });
-  </script>
+  target.addEventListener("targetLost", () => {
+    // Do nothing. Video continues playing.
+  });
+
+  floatingVideo.addEventListener("ended", () => {
+    floatingVideo.style.display = "none";
+    floatingVideo.currentTime = 0;
+  });
+</script>
+
+  <video id="floatingVideo" src="./video.mp4" controls playsinline style="
+  display:none;
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  width:90%;
+  max-height:90%;
+  z-index:99999;
+  background:black;">
+</video>
 </body>
 </html>
