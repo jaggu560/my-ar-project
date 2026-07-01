@@ -1,71 +1,189 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://cdn.jsdelivr.net/npm/aframe@1.5.0/dist/aframe-master.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MindAR Video Player</title>
+
+<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+<style>
+
+html,body{
+margin:0;
+overflow:hidden;
+font-family:Arial;
+background:#000;
+}
+
+/* Floating Video */
+
+#floatingVideo{
+
+display:none;
+
+position:fixed;
+
+top:50%;
+
+left:50%;
+
+transform:translate(-50%,-50%);
+
+width:95%;
+
+max-width:420px;
+
+border-radius:15px;
+
+box-shadow:0 0 30px rgba(0,0,0,.6);
+
+z-index:99999;
+
+background:#000;
+
+}
+
+#closeBtn{
+
+display:none;
+
+position:fixed;
+
+top:20px;
+
+right:20px;
+
+z-index:100000;
+
+padding:12px 18px;
+
+font-size:18px;
+
+border:none;
+
+border-radius:8px;
+
+background:red;
+
+color:#fff;
+
+cursor:pointer;
+
+}
+
+</style>
+
 </head>
 
 <body>
-  <a-scene
-    mindar-image="imageTargetSrc: ./target.mind;"
-    color-space="sRGB"
-    renderer="colorManagement: true, physicallyCorrectLights"
-    vr-mode-ui="enabled: false"
-    device-orientation-permission-ui="enabled: false">
 
-    <a-assets>
-      <video
-        id="myvideo"
-        src="./video.mp4"
-        loop
-        muted
-        playsinline
-        webkit-playsinline>
-      </video>
-    </a-assets>
+<a-scene
 
-    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+mindar-image="imageTargetSrc: ./target.mind;"
 
-    <a-entity id="target" mindar-image-target="targetIndex: 0">
-      <a-video
-        src="#myvideo"
-        width="1"
-        height="1.78"
-        position="0 0 0">
-      </a-video>
-    </a-entity>
-  </a-scene>
+color-space="sRGB"
+
+renderer="colorManagement:true"
+
+vr-mode-ui="enabled:false"
+
+device-orientation-permission-ui="enabled:false">
+
+<a-camera
+
+position="0 0 0"
+
+look-controls="enabled:false">
+
+</a-camera>
+
+<a-entity
+
+id="target"
+
+mindar-image-target="targetIndex:0">
+
+</a-entity>
+
+</a-scene>
+
+<button id="closeBtn">✕ Close</button>
+
+<video
+
+id="floatingVideo"
+
+src="./video.mp4"
+
+controls
+
+playsinline
+
+webkit-playsinline
+
+preload="auto">
+
+</video>
 
 <script>
-  const floatingVideo = document.getElementById("floatingVideo");
-  const target = document.getElementById("target");
 
-  target.addEventListener("targetFound", () => {
-    floatingVideo.style.display = "block";
-    floatingVideo.play();
-  });
+const target=document.querySelector("#target");
 
-  target.addEventListener("targetLost", () => {
-    // Do nothing. Video continues playing.
-  });
+const video=document.querySelector("#floatingVideo");
 
-  floatingVideo.addEventListener("ended", () => {
-    floatingVideo.style.display = "none";
-    floatingVideo.currentTime = 0;
-  });
+const closeBtn=document.querySelector("#closeBtn");
+
+let played=false;
+
+// Target Found
+
+target.addEventListener("targetFound",()=>{
+
+if(played) return;
+
+played=true;
+
+video.style.display="block";
+
+closeBtn.style.display="block";
+
+video.play();
+
+});
+
+// Close Button
+
+closeBtn.onclick=function(){
+
+video.pause();
+
+video.currentTime=0;
+
+video.style.display="none";
+
+closeBtn.style.display="none";
+
+played=false;
+
+}
+
+// Video End
+
+video.onended=function(){
+
+video.style.display="none";
+
+closeBtn.style.display="none";
+
+played=false;
+
+}
+
 </script>
 
-  <video id="floatingVideo" src="./video.mp4" controls playsinline style="
-  display:none;
-  position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
-  width:90%;
-  max-height:90%;
-  z-index:99999;
-  background:black;">
-</video>
 </body>
+
 </html>
