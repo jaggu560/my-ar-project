@@ -31,7 +31,7 @@
       <a-video
         src="#myvideo"
         width="1"
-        height="1.78"
+        height="0.56"
         position="0 0 0">
       </a-video>
     </a-entity>
@@ -42,12 +42,12 @@
     const target = document.querySelector("#target");
 
     target.addEventListener("targetFound", () => {
-    
+      video.play();
     });
 
-target.addEventListener("targetLost", () => {
-  video.pause();
-});
+    target.addEventListener("targetLost", () => {
+      video.pause();
+    });
   </script>
 </body>
 </html>
